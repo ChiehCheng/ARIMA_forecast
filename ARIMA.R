@@ -1,4 +1,4 @@
-## Line 4-55 for Figure 3
+## Line 3-55 for Figure 3
 
 #model 1
 canadaM1 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"Mfrequency"],trace = F)
@@ -112,7 +112,7 @@ M3_ICUcaseperm_plot <- plot_models(
 ) + ylim(-2.3, .8)
 
 
-## Line 116-122 for Table 1 (Take Canada as an example in the Alpha & Delta Period)
+## Line 117-129 for Table 1 (Take Canada as an example in the Alpha & Delta Period)
 
 canadaM1 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"Mfrequency"],trace = F)
 canadaM2 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"Gfrequency"],trace = F)
