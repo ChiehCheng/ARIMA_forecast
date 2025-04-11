@@ -1,0 +1,121 @@
+library(dplyr) #filter
+library(forecast) #auto.arima
+library(ggplot2) #ylim
+library(sjPlot) #plot_models
+
+setwd("your path")
+yougov <- read.csv("Protective_behaviors.csv")
+OWID <- read.csv("OWID.csv")
+canada_train <- merge(yougov, OWID, by = "week")
+
+####Applicable to the Alpha and Delta periods, where Y denotes either the case growth rate or ICU cases per million.####
+
+#create dataframe
+one <- canada_train[c(3:53), c("week", "case_growth_rate", "ICU_case_per_m")]
+two <- canada_train[c(1:51), c("Mfrequency", "Gfrequency", "vaccination")]
+canadaARIMAXdf <- cbind(one, two)
+index1 = 34 #train
+index2 = index1+1 #test
+canada_train0 <-filter(canadaARIMAXdf, week<index1)
+canada_train1 <- ts(canada_train0)
+
+#models in paper
+##M1
+canadaM1 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"Mfrequency"],trace = F)
+M1_plot <- plot_models(
+  canadaM1,
+  rm.terms =c("ar1", "ar2","ar3","ar4","ar5", "ma1","ma2","ma3","ma4","ma5","intercept"),
+  m.labels = c("canada"),
+  spacing = 1.1,
+  colors = c("#E41A1C"),
+  axis.labels = "Mf",
+  title = "Mf-14 & Case Growth Rate",
+  value.size = 5,
+  show.values = T, show.p = T, p.shape = F, digits = 3) + 
+  ylim(-2.3, .8)
+
+##M2
+canadaM2 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"Gfrequency"],trace = F)
+M2_plot <- plot_models(
+  canadaM2,
+  rm.terms =c("ar1", "ar2","ar3","ar4","ar5", "ma1","ma2","ma3","ma4","ma5","intercept"),
+  m.labels = c("canada"),
+  spacing = 1.1,
+  colors = c("#E41A1C"),
+  axis.labels = "Gf",
+  title = "Gf-14 & Case Growth Rate",
+  value.size = 5,
+  show.values = T, show.p = T, p.shape = F, digits = 3) + 
+  ylim(-2.3, .8)
+
+##M3
+###(y:case_growth_rate)
+canadaM3 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"vaccination"],trace = F)
+M3_plot <- plot_models(
+  canadaM3,
+  rm.terms =c("ar1", "ar2","ar3","ar4","ar5", "ma1","ma2","ma3","ma4","ma5","intercept"),
+  m.labels = c("canada"),
+  spacing = 1.1,
+  colors = c("#E41A1C"),
+  axis.labels = "Vac",
+  title = "Vaccination-14 & case_growth_rate",
+  value.size = 5,
+  show.values = T, show.p = T, p.shape = F, digits = 3) + 
+  ylim(-10, 10)
+
+##M3
+###(y:ICU_case_per_m)
+canadaM3 <- auto.arima(canada_train1[,"ICU_case_per_m"], xreg = canada_train1[,"vaccination"],trace = F)
+M3_plot <- plot_models(
+  canadaM3,
+  rm.terms =c("ar1", "ar2","ar3","ar4","ar5", "ma1","ma2","ma3","ma4","ma5","intercept"),
+  m.labels = c("canada"),
+  spacing = 1.1,
+  colors = c("#E41A1C"),
+  axis.labels = "Vac",
+  title = "Vaccination-14 & icu_per_m",
+  value.size = 5,
+  show.values = T, show.p = T, p.shape = F, digits = 3) + 
+  ylim(-1200, 1200)
+
+##Table 1 compares the models.
+canadaM1 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"Mfrequency"],trace = F)
+canadaM2 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"Gfrequency"],trace = F)
+canadaM3 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,"vaccination"],trace = F)
+canadaM4 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,c("Mfrequency", "vaccination")],trace = F)
+canadaM5 <- auto.arima(canada_train1[,"case_growth_rate"], xreg = canada_train1[,c("Gfrequency", "vaccination")],trace = F)
+canadaM6 <- auto.arima(canada_train1[,"case_growth_rate"], trace = F)
+summary(canadaM1)
+summary(canadaM2)
+summary(canadaM3)
+summary(canadaM4)
+summary(canadaM5)
+summary(canadaM6)
+
+
+####Applicable to the Alpha and Delta periods, where Y denotes either the death cases per million.####
+
+#create dataframe
+three <- canada_train[c(5:53), c("week", "death_case_per_m")]
+vaccination <- canada_train[c(1:49), c("vaccination")]
+canadaARIMAXdf <- cbind(three, vaccination)
+index1 = 34 #train
+index2 = index1+1 #test
+canada_train0 <- canadaARIMAXdf[canadaARIMAXdf$week<index1,]
+canada_train1 <- ts(canada_train0)
+
+#models in paper
+##M3
+###(y:death_case_per_m)
+canadaM3 <- auto.arima(canada_train1[,"death_case_per_m"], xreg = canada_train1[,"vaccination"],trace = F)
+M3_plot <- plot_models(
+  canadaM3,
+  rm.terms =c("ar1", "ar2","ar3","ar4","ar5", "ma1","ma2","ma3","ma4","ma5","intercept"),
+  m.labels = c("canada"),
+  spacing = 1.1,
+  colors = c("#E41A1C"),
+  axis.labels = "Vac",
+  title = "Vaccination-28 & death_per_m",
+  value.size = 5,
+  show.values = T, show.p = T, p.shape = F, digits = 3) + 
+  ylim(-140, 50)
