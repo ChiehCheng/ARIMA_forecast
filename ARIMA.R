@@ -88,7 +88,7 @@ M3_deathcaseperm_plot <- plot_models(
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
   axis.labels = "Vac",
-  title = "Vaccination-14 & death_per_m",
+  title = "Vaccination-28 & death_per_m",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
 ) + ylim(-140, 50)
