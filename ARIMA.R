@@ -30,7 +30,7 @@ M2_plot <- plot_models(
   m.labels = c("canada" ,"israel","italy","france"),
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
-  axis.labels = "Mf",
+  axis.labels = "Gf",
   title = "Gf-14 & Case Growth Rate",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
@@ -48,7 +48,7 @@ M3_plot <- plot_models(
   m.labels = c("canada" ,"israel","italy","france"),
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
-  axis.labels = "Mf",
+  axis.labels = "Booster",
   title = "booster-14 & Case Growth Rate",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
@@ -69,8 +69,8 @@ M3_casegrowthrate_plot <- plot_models(
   m.labels = c("canada" ,"israel","italy","france"),
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
-  axis.labels = "Mf",
-  title = "booster-14 & Case Growth Rate",
+  axis.labels = "Vac",
+  title = "Vaccination-14 & Case Growth Rate",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
 ) + ylim(-2.3, .8)
@@ -87,8 +87,8 @@ M3_deathcaseperm_plot <- plot_models(
   m.labels = c("canada" ,"israel","italy","france"),
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
-  axis.labels = "Mf",
-  title = "booster-14 & Case Growth Rate",
+  axis.labels = "Vac",
+  title = "Vaccination-14 & Case Growth Rate",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
 ) + ylim(-2.3, .8)
@@ -105,8 +105,8 @@ M3_ICUcaseperm_plot <- plot_models(
   m.labels = c("canada" ,"israel","italy","france"),
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
-  axis.labels = "Mf",
-  title = "booster-14 & Case Growth Rate",
+  axis.labels = "Vac",
+  title = "Vaccination-14 & Case Growth Rate",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
 ) + ylim(-2.3, .8)
