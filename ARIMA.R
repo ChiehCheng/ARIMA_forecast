@@ -73,7 +73,7 @@ M3_casegrowthrate_plot <- plot_models(
   title = "Vaccination-14 & Case Growth Rate",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
-) + ylim(-2.3, .8)
+) + ylim(-10, 10)
 
 #model 3(y:death_case_per_m)
 canadaM3 <- auto.arima(canada_train1[,"death_case_per_m"], xreg = canada_train1[,"vaccination"],trace = F)
@@ -88,10 +88,10 @@ M3_deathcaseperm_plot <- plot_models(
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
   axis.labels = "Vac",
-  title = "Vaccination-14 & Case Growth Rate",
+  title = "Vaccination-14 & death_per_m",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
-) + ylim(-2.3, .8)
+) + ylim(-140, 50)
 
 #model 3(y:ICU_case_per_m)
 canadaM3 <- auto.arima(canada_train1[,"ICU_case_per_m"], xreg = canada_train1[,"vaccination"],trace = F)
@@ -106,10 +106,10 @@ M3_ICUcaseperm_plot <- plot_models(
   spacing = 1.1,
   colors = c("#377EB8", "#4DAF4A","#984EA3","#E41A1C" ),
   axis.labels = "Vac",
-  title = "Vaccination-14 & Case Growth Rate",
+  title = "Vaccination-14 & icu_per_m",
   value.size = 5,
   show.values = T, show.p = T, p.shape = F, digits = 3
-) + ylim(-2.3, .8)
+) + ylim(-1200, 1200)
 
 
 ## Line 117-129 for Table 1 (Take Canada as an example in the Alpha & Delta Period)
