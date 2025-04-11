@@ -1,0 +1,77 @@
+library(lubridate)
+library(dplyr)
+
+setwd("your path")
+YouGov <- read.csv("canada.csv")
+canadadatadf <- YouGov[, c("RecordNo", "endtime", "i12_health_1", "i12_health_6")]
+colnames(canadadatadf)[which(names(canadadatadf) == "i12_health_1")] <- "i12_health_1.mask."
+colnames(canadadatadf)[which(names(canadadatadf) == "i12_health_6")] <- "i12_health_6.goingout."
+
+canadadatadf$date<-dmy_hm(canadadatadf$endtime)
+canadadatadf$date1 <- as.Date(ymd_hms(canadadatadf$date))
+
+start_time <- as.Date("2021-01-06")
+end_time <- as.Date("2021-12-30")
+canadadatadf <- filter(canadadatadf, date1 >= start_time & date1 <= end_time)
+
+#Mask####
+canadadatadf <- canadadatadf %>% mutate(mask2=recode(i12_health_1.mask., "Always"= 4, "Frequently"= 3, "Sometimes"= 2, "Rarely"= 1, "Not at all" = 0))
+
+test11 <- order(canadadatadf$date1, decreasing = F)  
+canadadatadf <- canadadatadf[test11,]
+canadadatadf <- data.frame(canadadatadf)
+
+week.firstday = c("2021-01-06", "2021-01-11", "2021-01-18", "2021-01-25", "2021-02-01", "2021-02-08", "2021-02-15", "2021-02-22", "2021-03-01", "2021-03-10", "2021-03-15", "2021-03-24", "2021-03-29", "2021-04-05", "2021-04-12", "2021-04-19", "2021-04-26", "2021-05-03", "2021-05-10", "2021-05-17", "2021-05-24", "2021-05-31", "2021-06-07", "2021-06-14", "2021-06-21", "2021-06-28", "2021-07-05", "2021-07-12", "2021-07-19", "2021-07-26", "2021-08-02", "2021-08-09", "2021-08-16", "2021-08-23", "2021-08-30", "2021-09-06", "2021-09-13", "2021-09-20", "2021-09-27", "2021-10-04", "2021-10-11", "2021-10-19", "2021-10-25", "2021-11-01", "2021-11-08", "2021-11-15", "2021-11-22", "2021-11-29", "2021-12-06", "2021-12-14", "2021-12-20", "2021-12-27") 
+week.lastday = c("2021-01-10", "2021-01-17", "2021-01-24", "2021-01-31", "2021-02-07", "2021-02-14", "2021-02-21", "2021-02-28", "2021-03-05", "2021-03-14", "2021-03-19", "2021-03-28", "2021-04-04", "2021-04-11", "2021-04-18", "2021-04-25", "2021-05-02", "2021-05-09", "2021-05-16", "2021-05-23", "2021-05-30", "2021-06-06", "2021-06-13", "2021-06-20", "2021-06-27", "2021-07-04", "2021-07-11", "2021-07-18", "2021-07-25", "2021-08-01", "2021-08-08", "2021-08-15", "2021-08-22", "2021-08-29", "2021-09-05", "2021-09-12", "2021-09-19", "2021-09-26", "2021-10-03", "2021-10-10", "2021-10-15", "2021-10-24", "2021-10-31", "2021-11-07", "2021-11-14", "2021-11-21", "2021-11-28", "2021-12-05", "2021-12-10", "2021-12-19", "2021-12-26", "2021-12-30")
+
+tmp.mean.week = rep(0,52)  
+for( ii in 1: length(week.firstday)){
+  id11 = which (canadadatadf[,6]==week.firstday[ii])
+  id11
+  canadadatadf [id11,6]
+  
+  id12 = which (canadadatadf[,6]==week.lastday[ii])
+  id12
+  length(id12)
+  
+  id11[1]; id12[length(id12)]
+  
+  mean.week1 = mean(canadadatadf [id11[1]:id12[length(id12)],7])#7 is mask2
+  tmp.mean.week[ii] = mean.week1
+} 
+tmp.mean.week 
+
+mask <- data.frame(tmp.mean.week)
+colnames(mask)[which(names(mask) == "tmp.mean.week")] <- "Mfrequency"
+
+#Going out####
+canadadatadf <- canadadatadf %>% mutate(goingout2=recode(i12_health_6.goingout., "Always"= 4, "Frequently"= 3, "Sometimes"= 2, "Rarely"= 1, "Not at all" = 0)) 
+tmp.mean.week2 = rep(0,52)  
+for( ii in 1: length(week.firstday)){
+  id11 = which (canadadatadf[,6]==week.firstday[ii])
+  id11
+  canadadatadf [id12,]
+  
+  id12 = which (canadadatadf[,6]==week.lastday[ii])
+  id12
+  length(id12)
+  
+  id11[1]; id12[length(id12)]
+  
+  mean.week1 = mean(canadadatadf [id11[1]:id12[length(id12)],8])#8 is goingout2
+  tmp.mean.week2[ii] = mean.week1
+} 
+tmp.mean.week2 
+
+goingout <- data.frame(tmp.mean.week2)
+colnames(goingout)[which(names(goingout) == "tmp.mean.week2")] <- "Gfrequency"
+
+#save data
+week <- c(1:53)
+week <- data.frame(week)
+mask <- rbind(mask[1, ], mask)
+goingout <- rbind(goingout[1, ], goingout)
+Protective_behaviors <- cbind(week, mask)
+Protective_behaviors <- cbind(Protective_behaviors, goingout)
+
+write.csv(Protective_behaviors, "Protective_behaviors.csv")
